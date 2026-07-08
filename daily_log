@@ -1,0 +1,56 @@
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Daily Log</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <h2>บันทึกประจำวัน</h2>
+        <input type="text" id="taskInput" placeholder="วันนี้ทำอะไรไปบ้าง?">
+        <button onclick="addTask()">บันทึก</button>
+        <ul id="taskList"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+style.css
+body { font-family: sans-serif; background: #f4f4f9; padding: 10px; }
+#app { max-width: 400px; margin: auto; }
+input { width: 70%; padding: 10px; }
+button { padding: 10px; }
+ul { list-style: none; padding: 0; }
+li { background: white; margin: 5px 0; padding: 10px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+script.js
+function addTask() {
+    var task = document.getElementById('taskInput').value;
+    if (task) {
+        var li = document.createElement('li');
+        li.textContent = new Date().toLocaleDateString() + ": " + task;
+        document.getElementById('taskList').appendChild(li);
+        
+        // บันทึกลงเครื่อง
+        var savedTasks = localStorage.getItem('myLogs') || '';
+        localStorage.setItem('myLogs', savedTasks + task + '|');
+        document.getElementById('taskInput').value = '';
+    }
+}
+
+// โหลดข้อมูลเก่าตอนเปิดแอป
+window.onload = function() {
+    var logs = localStorage.getItem('myLogs');
+    if (logs) {
+        var items = logs.split('|');
+        items.forEach(function(item) {
+            if (item) {
+                var li = document.createElement('li');
+                li.textContent = item;
+                document.getElementById('taskList').appendChild(li);
+            }
+        });
+    }
+};
