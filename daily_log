@@ -1,56 +1,188 @@
-index.html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Daily Log</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Calendar Log</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="app">
-        <h2>บันทึกประจำวัน</h2>
-        <input type="text" id="taskInput" placeholder="วันนี้ทำอะไรไปบ้าง?">
-        <button onclick="addTask()">บันทึก</button>
-        <ul id="taskList"></ul>
-    </div>
-    <script src="script.js"></script>
+<!-- LOGIN -->
+<div id="loginPage" class="container">
+    <h1>Daily Log</h1>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+</div>
+<!-- MAIN -->
+<div id="mainPage" class="hidden">
+<h1 id="monthLabel"></h1>
+<div id="calendar"></div>
+<div id="entryBox" class="hidden">
+    <h2 id="selectedDate"></h2>
+    <input id="noteInput" placeholder="Write something...">
+    <button onclick="saveEntry()">Save</button>
+</div>
+<table id="logTable">
+    <thead>
+        <tr>
+            <th>Note</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+</div>
+<div class="credit">LIGHTYEARX MOTOREX PROPERTY</div>
+<script src="script.js"></script>
 </body>
 </html>
-style.css
-body { font-family: sans-serif; background: #f4f4f9; padding: 10px; }
-#app { max-width: 400px; margin: auto; }
-input { width: 70%; padding: 10px; }
-button { padding: 10px; }
-ul { list-style: none; padding: 0; }
-li { background: white; margin: 5px 0; padding: 10px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-script.js
-function addTask() {
-    var task = document.getElementById('taskInput').value;
-    if (task) {
-        var li = document.createElement('li');
-        li.textContent = new Date().toLocaleDateString() + ": " + task;
-        document.getElementById('taskList').appendChild(li);
-        
-        // บันทึกลงเครื่อง
-        var savedTasks = localStorage.getItem('myLogs') || '';
-        localStorage.setItem('myLogs', savedTasks + task + '|');
-        document.getElementById('taskInput').value = '';
-    }
+
+body {
+margin: 0;
+font-family: -apple-system, sans-serif;
+background: #2ec4b6;
+color: #000;
+text-align: center;
 }
 
-// โหลดข้อมูลเก่าตอนเปิดแอป
-window.onload = function() {
-    var logs = localStorage.getItem('myLogs');
-    if (logs) {
-        var items = logs.split('|');
-        items.forEach(function(item) {
-            if (item) {
-                var li = document.createElement('li');
-                li.textContent = item;
-                document.getElementById('taskList').appendChild(li);
-            }
-        });
-    }
-};
+.hidden { display: none; }
+
+h1 {
+margin-top: 20px;
+font-weight: 500;
+}
+
+#calendar {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 8px;
+width: 90%;
+margin: 20px auto;
+}
+
+.day {
+padding: 15px;
+background: rgba(255,255,255,0.3);
+border-radius: 10px;
+cursor: pointer;
+}
+
+.day:hover {
+background: rgba(0,0,0,0.1);
+}
+
+#entryBox {
+margin: 20px;
+}
+
+input {
+padding: 10px;
+width: 200px;
+border-radius: 8px;
+border: none;
+}
+
+button {
+padding: 10px 15px;
+margin-left: 5px;
+border: none;
+border-radius: 8px;
+background: #000;
+color: #fff;
+}
+
+table {
+margin: 20px auto;
+width: 80%;
+border-collapse: collapse;
+background: rgba(255,255,255,0.2);
+}
+
+th, td {
+padding: 10px;
+border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+.credit {
+position: fixed;
+bottom: 10px;
+width: 100%;
+font-size: 10px;
+opacity: 0.3;
+}
+
+const USER = “admin”;
+const PASS = “1234”;
+
+let currentDate = new Date();
+let selectedKey = “”;
+
+// LOGIN
+function login() {
+if (
+document.getElementById(“username”).value === USER &&
+document.getElementById(“password”).value === PASS
+) {
+document.getElementById(“loginPage”).style.display = “none”;
+document.getElementById(“mainPage”).classList.remove(“hidden”);
+renderCalendar();
+} else {
+alert(“Wrong login”);
+}
+}
+
+// CALENDAR
+function renderCalendar() {
+const calendar = document.getElementById(“calendar”);
+calendar.innerHTML = “”;
+
+const year = currentDate.getFullYear();
+const month = currentDate.getMonth();
+document.getElementById("monthLabel").innerText =
+    currentDate.toLocaleString("en-US", { month: "long", year: "numeric" });
+const days = new Date(year, month + 1, 0).getDate();
+for (let d = 1; d <= days; d++) {
+    const div = document.createElement("div");
+    div.className = "day";
+    div.innerText = d;
+    div.onclick = function () {
+        selectedKey = year + "-" + month + "-" + d;
+        document.getElementById("entryBox").classList.remove("hidden");
+        document.getElementById("selectedDate").innerText =
+            d + " / " + (month + 1) + " / " + year;
+        loadEntries();
+    };
+    calendar.appendChild(div);
+}
+
+}
+
+// SAVE
+function saveEntry() {
+const note = document.getElementById(“noteInput”).value;
+if (!note) return;
+
+const time = new Date().toLocaleTimeString();
+const data = JSON.parse(localStorage.getItem("calendarLogs") || "{}");
+if (!data[selectedKey]) data[selectedKey] = [];
+data[selectedKey].push({ note: note, time: time });
+localStorage.setItem("calendarLogs", JSON.stringify(data));
+document.getElementById("noteInput").value = "";
+loadEntries();
+
+}
+
+// LOAD
+function loadEntries() {
+const table = document.querySelector(”#logTable tbody”);
+table.innerHTML = “”;
+
+const data = JSON.parse(localStorage.getItem("calendarLogs") || "{}");
+const list = data[selectedKey] || [];
+list.forEach(item => {
+    const row = "<tr><td>" + item.note + "</td><td>" + item.time + "</td></tr>";
+    table.innerHTML += row;
+});
+
+}
