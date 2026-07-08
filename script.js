@@ -1,44 +1,47 @@
-const USER = “admin”;
-const PASS = “1234”;
+var USER = “admin”;
+var PASS = “1234”;
 
-let currentDate = new Date();
-let selectedKey = “”;
+var currentDate = new Date();
+var selectedKey = “”;
 
 // LOGIN
 function login() {
-if (
-document.getElementById(“username”).value === USER &&
-document.getElementById(“password”).value === PASS
-) {
-document.getElementById(“loginPage”).style.display = “none”;
-document.getElementById(“mainPage”).classList.remove(“hidden”);
-renderCalendar();
+var u = document.getElementById(“username”).value;
+var p = document.getElementById(“password”).value;
+
+if (u === USER && p === PASS) {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").className = "";
+    renderCalendar();
 } else {
-alert(“Wrong login”);
+    alert("Wrong username or password");
 }
+
 }
 
 // CALENDAR
 function renderCalendar() {
-const calendar = document.getElementById(“calendar”);
+var calendar = document.getElementById(“calendar”);
 calendar.innerHTML = “”;
 
-const year = currentDate.getFullYear();
-const month = currentDate.getMonth();
-document.getElementById("monthLabel").innerText =
-    currentDate.toLocaleString("en-US", { month: "long", year: "numeric" });
-const days = new Date(year, month + 1, 0).getDate();
-for (let d = 1; d <= days; d++) {
-    const div = document.createElement("div");
+var year = currentDate.getFullYear();
+var month = currentDate.getMonth();
+document.getElementById("monthLabel").innerHTML =
+    (month + 1) + " / " + year;
+var days = new Date(year, month + 1, 0).getDate();
+for (var d = 1; d <= days; d++) {
+    var div = document.createElement("div");
     div.className = "day";
-    div.innerText = d;
-    div.onclick = function () {
-        selectedKey = year + "-" + month + "-" + d;
-        document.getElementById("entryBox").classList.remove("hidden");
-        document.getElementById("selectedDate").innerText =
-            d + " / " + (month + 1) + " / " + year;
-        loadEntries();
-    };
+    div.innerHTML = d;
+    div.onclick = (function(day) {
+        return function() {
+            selectedKey = year + "-" + month + "-" + day;
+            document.getElementById("entryBox").className = "";
+            document.getElementById("selectedDate").innerHTML =
+                day + " / " + (month + 1) + " / " + year;
+            loadEntries();
+        };
+    })(d);
     calendar.appendChild(div);
 }
 
@@ -46,13 +49,18 @@ for (let d = 1; d <= days; d++) {
 
 // SAVE
 function saveEntry() {
-const note = document.getElementById(“noteInput”).value;
+var note = document.getElementById(“noteInput”).value;
 if (!note) return;
 
-const time = new Date().toLocaleTimeString();
-const data = JSON.parse(localStorage.getItem("calendarLogs") || "{}");
+var time = new Date().toLocaleTimeString();
+var data = localStorage.getItem("calendarLogs");
+if (!data) data = "{}";
+data = JSON.parse(data);
 if (!data[selectedKey]) data[selectedKey] = [];
-data[selectedKey].push({ note: note, time: time });
+data[selectedKey].push({
+    note: note,
+    time: time
+});
 localStorage.setItem("calendarLogs", JSON.stringify(data));
 document.getElementById("noteInput").value = "";
 loadEntries();
@@ -61,14 +69,16 @@ loadEntries();
 
 // LOAD
 function loadEntries() {
-const table = document.querySelector(”#logTable tbody”);
+var table = document.querySelector(”#logTable tbody”);
 table.innerHTML = “”;
 
-const data = JSON.parse(localStorage.getItem("calendarLogs") || "{}");
-const list = data[selectedKey] || [];
-list.forEach(item => {
-    const row = "<tr><td>" + item.note + "</td><td>" + item.time + "</td></tr>";
+var data = localStorage.getItem("calendarLogs");
+if (!data) data = "{}";
+data = JSON.parse(data);
+var list = data[selectedKey] || [];
+for (var i = 0; i < list.length; i++) {
+    var row = "<tr><td>" + list[i].note + "</td><td>" + list[i].time + "</td></tr>";
     table.innerHTML += row;
-});
+}
 
 }
