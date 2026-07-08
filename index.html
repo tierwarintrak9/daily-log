@@ -2,37 +2,46 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquid Planner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Planner</title>
     <style>
-        body { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); font-family: -apple-system, sans-serif; padding: 10px; }
-        .glass { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3); padding: 20px; border-radius: 20px; color: white; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: rgba(255,255,255,0.5); }
-        button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #007aff; color: white; font-weight: bold; }
-        #log { margin-top: 20px; }
-        .entry { background: rgba(255,255,255,0.3); padding: 10px; margin-bottom: 5px; border-radius: 8px; }
+        body { font-family: -apple-system, sans-serif; background: #f2f2f7; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007aff; color: white; border: none; border-radius: 10px; font-weight: bold; }
+        .task-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .date-label { color: #8e8e93; font-size: 0.8em; }
     </style>
 </head>
 <body>
-    <div class="glass">
-        <h2>Daily Liquid Planner</h2>
-        <input type="text" id="task" placeholder="What's the plan?">
+    <div class="card">
+        <h2>My Tasks</h2>
+        <input type="text" id="task" placeholder="What to do?">
         <input type="date" id="date">
-        <button onclick="saveTask()">Add to Liquid Log</button>
-        <div id="log"></div>
+        <button onclick="add()">Add Task</button>
+        <div id="list"></div>
     </div>
-
     <script>
-        function saveTask() {
-            let task = document.getElementById('task').value;
-            let date = document.getElementById('date').value;
-            if(task && date) {
-                let entry = document.createElement('div');
-                entry.className = 'entry';
-                entry.innerHTML = `<strong>${date}</strong>: ${task}`;
-                document.getElementById('log').appendChild(entry);
-                localStorage.setItem(date, task);
+        function add() {
+            let t = document.getElementById('task').value;
+            let d = document.getElementById('date').value;
+            if(t && d) {
+                let div = document.createElement('div');
+                div.className = 'task-item';
+                div.innerHTML = `<div class="date-label">${d}</div><strong>${t}</strong>`;
+                document.getElementById('list').prepend(div);
+                localStorage.setItem(Date.now(), d + '|' + t);
+                document.getElementById('task').value = '';
             }
+        }
+        // โหลดข้อมูลเก่า
+        for(let i=0; i<localStorage.length; i++) {
+            let key = localStorage.key(i);
+            let val = localStorage.getItem(key).split('|');
+            let div = document.createElement('div');
+            div.className = 'task-item';
+            div.innerHTML = `<div class="date-label">${val[0]}</div><strong>${val[1]}</strong>`;
+            document.getElementById('list').appendChild(div);
         }
     </script>
 </body>
