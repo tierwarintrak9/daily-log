@@ -2,27 +2,23 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planner</title>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
-    <style>
-        body { font-family: sans-serif; padding: 10px; background: #fff; }
-        #calendar { max-width: 900px; margin: 0 auto; }
-        .fc-toolbar { background: #333; color: white; padding: 10px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Daily Planner</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id='calendar'></div>
-    <script>
-        $(document).ready(function() {
-            $('#calendar').fullCalendar({
-                header: { left: 'prev,next today', center: 'title', right: 'month' },
-                events: [] // ใส่ข้อมูลกิจกรรมที่นี่
-            });
-        });
-    </script>
+    <div id="app">
+        <h1 id="dateHeader"></h1>
+        <input type="text" id="taskInput" placeholder="What needs to be done?">
+        <div class="row">
+            <input type="date" id="dateInput">
+            <input type="time" id="timeInput">
+        </div>
+        <button onclick="addTask()">Add Task</button>
+        <ul id="taskList"></ul>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
+
