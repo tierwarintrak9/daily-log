@@ -3,36 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Calendar Log</title>
+<title>Daily Log Table</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- LOGIN -->
-<div id="loginPage" class="container">
-    <h1>Daily Log</h1>
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-</div>
-<!-- MAIN -->
-<div id="mainPage" class="hidden">
-<h1 id="monthLabel"></h1>
-<div id="calendar"></div>
-<div id="entryBox" class="hidden">
-    <h2 id="selectedDate"></h2>
-    <input id="noteInput" placeholder="Write something...">
-    <button onclick="saveEntry()">Save</button>
+<h1>Daily Log</h1>
+<div class="top-bar">
+    <input type="date" id="filterDate">
+    <button onclick="addRow()">+ Add Row</button>
 </div>
 <table id="logTable">
     <thead>
         <tr>
-            <th>Note</th>
+            <th>Task</th>
+            <th>Detail</th>
+            <th>Date</th>
             <th>Time</th>
         </tr>
     </thead>
     <tbody></tbody>
 </table>
-</div>
 <div class="credit">LIGHTYEARX MOTOREX PROPERTY</div>
 <script src="script.js"></script>
 </body>
