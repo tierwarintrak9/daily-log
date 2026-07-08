@@ -1,0 +1,6 @@
+body { font-family: sans-serif; background: #f4f4f9; padding: 10px; }
+#app { max-width: 400px; margin: auto; }
+input { width: 70%; padding: 10px; }
+button { padding: 10px; }
+ul { list-style: none; padding: 0; }
+li { background: white; margin: 5px 0; padding: 10px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
