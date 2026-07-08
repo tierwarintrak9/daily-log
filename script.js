@@ -1,28 +1,29 @@
+document.getElementById('currentDate').textContent = new Date().toDateString();
+
 function addTask() {
     var task = document.getElementById('taskInput').value;
-    if (task) {
+    var date = document.getElementById('dateInput').value;
+    if (task && date) {
         var li = document.createElement('li');
-        li.textContent = new Date().toLocaleDateString() + ": " + task;
+        li.innerHTML = `<span><strong>${task}</strong><br><small>${date}</small></span>`;
         document.getElementById('taskList').appendChild(li);
         
-        // บันทึกลงเครื่อง
-        var savedTasks = localStorage.getItem('myLogs') || '';
-        localStorage.setItem('myLogs', savedTasks + task + '|');
+        // บันทึกลง LocalStorage
+        var saved = localStorage.getItem('tasks') || [];
+        localStorage.setItem('tasks', (saved ? saved + ',' : '') + task + '|' + date);
+        
         document.getElementById('taskInput').value = '';
     }
 }
 
-// โหลดข้อมูลเก่าตอนเปิดแอป
 window.onload = function() {
-    var logs = localStorage.getItem('myLogs');
-    if (logs) {
-        var items = logs.split('|');
-        items.forEach(function(item) {
-            if (item) {
-                var li = document.createElement('li');
-                li.textContent = item;
-                document.getElementById('taskList').appendChild(li);
-            }
+    var saved = localStorage.getItem('tasks');
+    if (saved) {
+        saved.split(',').forEach(function(item) {
+            var parts = item.split('|');
+            var li = document.createElement('li');
+            li.innerHTML = `<span><strong>${parts[0]}</strong><br><small>${parts[1]}</small></span>`;
+            document.getElementById('taskList').appendChild(li);
         });
     }
 };
