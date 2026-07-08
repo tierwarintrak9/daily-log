@@ -2,23 +2,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Daily Planner</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid Planner</title>
+    <style>
+        body { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); font-family: -apple-system, sans-serif; padding: 10px; }
+        .glass { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3); padding: 20px; border-radius: 20px; color: white; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: rgba(255,255,255,0.5); }
+        button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #007aff; color: white; font-weight: bold; }
+        #log { margin-top: 20px; }
+        .entry { background: rgba(255,255,255,0.3); padding: 10px; margin-bottom: 5px; border-radius: 8px; }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <h1 id="dateHeader"></h1>
-        <input type="text" id="taskInput" placeholder="What needs to be done?">
-        <div class="row">
-            <input type="date" id="dateInput">
-            <input type="time" id="timeInput">
-        </div>
-        <button onclick="addTask()">Add Task</button>
-        <ul id="taskList"></ul>
+    <div class="glass">
+        <h2>Daily Liquid Planner</h2>
+        <input type="text" id="task" placeholder="What's the plan?">
+        <input type="date" id="date">
+        <button onclick="saveTask()">Add to Liquid Log</button>
+        <div id="log"></div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        function saveTask() {
+            let task = document.getElementById('task').value;
+            let date = document.getElementById('date').value;
+            if(task && date) {
+                let entry = document.createElement('div');
+                entry.className = 'entry';
+                entry.innerHTML = `<strong>${date}</strong>: ${task}`;
+                document.getElementById('log').appendChild(entry);
+                localStorage.setItem(date, task);
+            }
+        }
+    </script>
 </body>
 </html>
-
