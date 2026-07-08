@@ -1,9 +1,73 @@
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f2f2f7; padding: 20px; }
-#app { max-width: 450px; margin: auto; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-h1 { font-size: 24px; text-align: center; color: #1c1c1e; margin-bottom: 20px; }
-input { width: 100%; padding: 15px; margin: 5px 0; border: none; border-radius: 12px; background: #e5e5ea; box-sizing: border-box; }
-.row { display: flex; gap: 10px; }
-.row input { flex: 1; }
-button { width: 100%; padding: 15px; margin-top: 10px; background: #007aff; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
-ul { list-style: none; padding: 0; margin-top: 20px; }
-li { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 6px solid #007aff; }
+body {
+margin: 0;
+font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+background: #2ec4b6;
+color: #000;
+text-align: center;
+}
+
+.container {
+margin-top: 80px;
+}
+
+.hidden {
+display: none;
+}
+
+h1 {
+font-weight: 500;
+margin-bottom: 30px;
+}
+
+input {
+display: block;
+margin: 10px auto;
+padding: 10px;
+width: 200px;
+border: none;
+border-radius: 8px;
+}
+
+button {
+padding: 10px 20px;
+border: none;
+border-radius: 10px;
+background: #000;
+color: #fff;
+cursor: pointer;
+}
+
+button:hover {
+opacity: 0.8;
+}
+
+.form {
+margin-bottom: 20px;
+}
+
+table {
+margin: auto;
+border-collapse: collapse;
+width: 80%;
+background: rgba(255,255,255,0.2);
+border-radius: 10px;
+overflow: hidden;
+}
+
+th, td {
+padding: 10px;
+border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+th {
+background: rgba(0,0,0,0.1);
+}
+
+.credit {
+position: fixed;
+bottom: 10px;
+width: 100%;
+text-align: center;
+font-size: 10px;
+opacity: 0.4;
+}
