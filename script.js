@@ -1,29 +1,47 @@
-document.getElementById('dateHeader').textContent = new Date().toDateString();
+const USER = “admin”;
+const PASS = “1234”;
 
-function addTask() {
-    var task = document.getElementById('taskInput').value;
-    var date = document.getElementById('dateInput').value;
-    var time = document.getElementById('timeInput').value;
-    if (task && date && time) {
-        var li = document.createElement('li');
-        li.innerHTML = `<strong>${task}</strong><br><small style="color:#8e8e93">${date} at ${time}</small>`;
-        document.getElementById('taskList').appendChild(li);
-        
-        var saved = localStorage.getItem('tasks') || '';
-        localStorage.setItem('tasks', saved + (saved ? ',' : '') + task + '|' + date + '|' + time);
-        
-        document.getElementById('taskInput').value = '';
-    }
+function login() {
+const u = document.getElementById(“username”).value;
+const p = document.getElementById(“password”).value;
+
+if (u === USER && p === PASS) {
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("mainPage").classList.remove("hidden");
+    loadData();
+} else {
+    alert("Invalid login");
 }
 
-window.onload = function() {
-    var saved = localStorage.getItem('tasks');
-    if (saved) {
-        saved.split(',').forEach(function(item) {
-            var p = item.split('|');
-            var li = document.createElement('li');
-            li.innerHTML = `<strong>${p[0]}</strong><br><small style="color:#8e8e93">${p[1]} at ${p[2]}</small>`;
-            document.getElementById('taskList').appendChild(li);
-        });
-    }
-};
+}
+
+function addEntry() {
+const task = document.getElementById(“task”).value;
+if (!task) return;
+
+const now = new Date();
+const date = now.toLocaleDateString();
+const time = now.toLocaleTimeString();
+const data = JSON.parse(localStorage.getItem("logs") || "[]");
+data.push({ task, date, time });
+localStorage.setItem("logs", JSON.stringify(data));
+document.getElementById("task").value = "";
+loadData();
+
+}
+
+function loadData() {
+const table = document.querySelector(”#logTable tbody”);
+table.innerHTML = “”;
+
+const data = JSON.parse(localStorage.getItem("logs") || "[]");
+data.forEach(item => {
+    const row = `<tr>
+        <td>${item.task}</td>
+        <td>${item.date}</td>
+        <td>${item.time}</td>
+    </tr>`;
+    table.innerHTML += row;
+});
+
+}
