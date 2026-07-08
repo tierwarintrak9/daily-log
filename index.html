@@ -2,47 +2,36 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Daily Planner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planner</title>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f2f2f7; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #007aff; color: white; border: none; border-radius: 10px; font-weight: bold; }
-        .task-item { border-bottom: 1px solid #eee; padding: 10px 0; }
-        .date-label { color: #8e8e93; font-size: 0.8em; }
+        body { font-family: -apple-system, sans-serif; padding: 10px; background: #f2f2f7; }
+        #calendar { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>My Tasks</h2>
-        <input type="text" id="task" placeholder="What to do?">
-        <input type="date" id="date">
-        <button onclick="add()">Add Task</button>
-        <div id="list"></div>
-    </div>
+    <div id='calendar'></div>
+
     <script>
-        function add() {
-            let t = document.getElementById('task').value;
-            let d = document.getElementById('date').value;
-            if(t && d) {
-                let div = document.createElement('div');
-                div.className = 'task-item';
-                div.innerHTML = `<div class="date-label">${d}</div><strong>${t}</strong>`;
-                document.getElementById('list').prepend(div);
-                localStorage.setItem(Date.now(), d + '|' + t);
-                document.getElementById('task').value = '';
-            }
-        }
-        // โหลดข้อมูลเก่า
-        for(let i=0; i<localStorage.length; i++) {
-            let key = localStorage.key(i);
-            let val = localStorage.getItem(key).split('|');
-            let div = document.createElement('div');
-            div.className = 'task-item';
-            div.innerHTML = `<div class="date-label">${val[0]}</div><strong>${val[1]}</strong>`;
-            document.getElementById('list').appendChild(div);
-        }
+        $(document).ready(function() {
+            $('#calendar').fullCalendar({
+                header: { left: 'prev,next', center: 'title', right: 'today' },
+                dayClick: function(date) {
+                    var task = prompt("Add task for " + date.format());
+                    if (task) {
+                        $('#calendar').fullCalendar('renderEvent', { title: task, start: date }, true);
+                        localStorage.setItem(date.format(), task);
+                    }
+                },
+                events: [] // จะโหลดข้อมูลจาก localStorage ถ้าอยากได้ละเอียดกว่านี้บอกผมนะ
+            });
+        });
     </script>
 </body>
 </html>
+
+
